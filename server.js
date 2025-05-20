@@ -7,25 +7,27 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Mejor: usar async/await para conectar y capturar errores
+// Conectar a MongoDB Atlas
 async function conectarMongo() {
   try {
     await mongoose.connect('mongodb+srv://adminunity:cetis26a2023@cetisdb-p.ppzpei7.mongodb.net/?retryWrites=true&w=majority&appName=cetisdb-p', {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-    console.log('Conectado a MongoDB Atlas');
+    console.log('✅ Conectado a MongoDB Atlas');
   } catch (error) {
-    console.error('Error conectando a MongoDB:', error);
+    console.error('❌ Error conectando a MongoDB:', error);
   }
 }
 conectarMongo();
 
+// Modelo de usuario (colección se llamará automáticamente "usuarios")
 const Usuario = mongoose.model('Usuario', {
   nombre: String,
   puntuacion: Number
 });
 
+// Endpoint para obtener usuarios
 app.get('/usuarios', async (req, res) => {
   try {
     const usuarios = await Usuario.find();
@@ -35,6 +37,7 @@ app.get('/usuarios', async (req, res) => {
   }
 });
 
+// Endpoint para agregar usuario
 app.post('/usuarios', async (req, res) => {
   try {
     const nuevoUsuario = new Usuario(req.body);
@@ -45,6 +48,7 @@ app.post('/usuarios', async (req, res) => {
   }
 });
 
+// Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
+  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
