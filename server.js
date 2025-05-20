@@ -10,7 +10,7 @@ app.use(express.json());
 // Conectar a MongoDB Atlas
 async function conectarMongo() {
   try {
-    await mongoose.connect('mongodb+srv://adminunity:cetis26a2023@cetisdb-p.ppzpei7.mongodb.net/?retryWrites=true&w=majority&appName=cetisdb-p', {
+    await mongoose.connect('mongodb+srv://adminunity:cetis26a2023@cetisdb-p.ppzpei7.mongodb.net/connectunity?retryWrites=true&w=majority&appName=cetisdb-p', {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
