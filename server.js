@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // Cambia la URL con tu string de conexión real
-mongoose.connect('mongodb+srv://adminunity:cetis26a2023@connectunity.xxxxx.mongodb.net/juegounity?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://adminunity:cetis26a2023@cetisdb-p.ppzpei7.mongodb.net/?retryWrites=true&w=majority&appName=cetisdb-p', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
