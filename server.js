@@ -48,6 +48,32 @@ app.post('/usuarios', async (req, res) => {
   }
 });
 
+// Actualizar usuario por ID
+app.put('/usuarios/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const datosActualizar = req.body;
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(id, datosActualizar, { new: true });
+    if (!usuarioActualizado) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json({ mensaje: 'Usuario actualizado', usuario: usuarioActualizado });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar usuario' });
+  }
+});
+
+// Borrar usuario por ID
+app.delete('/usuarios/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const eliminado = await Usuario.findByIdAndDelete(id);
+    if (!eliminado) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json({ mensaje: 'Usuario eliminado' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar usuario' });
+  }
+});
+
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
