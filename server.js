@@ -71,6 +71,38 @@ app.delete('/usuarios/:id', async (req, res) => {
   }
 });
 
+// Registrar usuario
+app.post('/register', async (req, res) => {
+  const { id, contrasena } = req.body;
+  if (!id || !contrasena) return res.status(400).json({ error: 'Falta id o contraseña' });
+
+  try {
+    const existe = await Usuario.findOne({ id });
+    if (existe) return res.status(409).json({ error: 'El usuario ya existe' });
+
+    const nuevo = new Usuario({ id, contrasena });
+    await nuevo.save();
+    res.json({ mensaje: 'Usuario registrado' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error al registrar' });
+  }
+});
+
+// Login de usuario
+app.post('/login', async (req, res) => {
+  const { id, contrasena } = req.body;
+  if (!id || !contrasena) return res.status(400).json({ error: 'Falta id o contraseña' });
+
+  try {
+    const usuario = await Usuario.findOne({ id, contrasena });
+    if (!usuario) return res.status(401).json({ error: 'Credenciales incorrectas' });
+
+    res.json({ mensaje: 'Login exitoso', usuario });
+  } catch (err) {
+    res.status(500).json({ error: 'Error en el login' });
+  }
+});
+
 
 // Iniciar servidor
 app.listen(PORT, () => {
