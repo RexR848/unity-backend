@@ -22,10 +22,8 @@ async function conectarMongo() {
 conectarMongo();
 
 // Modelo de usuario (colección se llamará automáticamente "usuarios")
-const Usuario = mongoose.model('Usuario', {
-  nombre: String,
-  puntuacion: Number
-});
+const Usuario = mongoose.model('Usuario', new mongoose.Schema({}, { strict: false }));
+
 
 // Endpoint para obtener usuarios
 app.get('/usuarios', async (req, res) => {
