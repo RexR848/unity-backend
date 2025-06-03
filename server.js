@@ -24,25 +24,24 @@ conectarMongo();
 // Modelo de usuario (colección se llamará automáticamente "usuarios")
 const Usuario = mongoose.model('Usuario', new mongoose.Schema({}, { strict: false }));
 
-
-// Endpoint para obtener usuarios
+// Obtener todos los usuarios
 app.get('/usuarios', async (req, res) => {
   try {
     const usuarios = await Usuario.find();
     res.json(usuarios);
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener usuarios' });
+    res.status(500).json({ error: 'Error al obtener usuarios', detalle: error.message });
   }
 });
 
-// Endpoint para agregar usuario
+// Agregar un nuevo usuario
 app.post('/usuarios', async (req, res) => {
   try {
     const nuevoUsuario = new Usuario(req.body);
     await nuevoUsuario.save();
     res.json({ mensaje: 'Usuario guardado correctamente' });
   } catch (error) {
-    res.status(500).json({ error: 'Error al guardar usuario' });
+    res.status(500).json({ error: 'Error al guardar usuario', detalle: error.message });
   }
 });
 
@@ -55,7 +54,7 @@ app.put('/usuarios/:id', async (req, res) => {
     if (!usuarioActualizado) return res.status(404).json({ error: 'Usuario no encontrado' });
     res.json({ mensaje: 'Usuario actualizado', usuario: usuarioActualizado });
   } catch (error) {
-    res.status(500).json({ error: 'Error al actualizar usuario' });
+    res.status(500).json({ error: 'Error al actualizar usuario', detalle: error.message });
   }
 });
 
@@ -67,42 +66,41 @@ app.delete('/usuarios/:id', async (req, res) => {
     if (!eliminado) return res.status(404).json({ error: 'Usuario no encontrado' });
     res.json({ mensaje: 'Usuario eliminado' });
   } catch (error) {
-    res.status(500).json({ error: 'Error al eliminar usuario' });
+    res.status(500).json({ error: 'Error al eliminar usuario', detalle: error.message });
   }
 });
 
 // Registrar usuario
 app.post('/register', async (req, res) => {
-  const { id, contrasena } = req.body;
-  if (!id || !contrasena) return res.status(400).json({ error: 'Falta id o contraseña' });
+  const { usuario, contrasena } = req.body;
+  if (!usuario || !contrasena) return res.status(400).json({ error: 'Falta usuario o contraseña' });
 
   try {
-    const existe = await Usuario.findOne({ id });
+    const existe = await Usuario.findOne({ usuario });
     if (existe) return res.status(409).json({ error: 'El usuario ya existe' });
 
-    const nuevo = new Usuario({ id, contrasena });
+    const nuevo = new Usuario({ usuario, contrasena });
     await nuevo.save();
     res.json({ mensaje: 'Usuario registrado' });
   } catch (err) {
-    res.status(500).json({ error: 'Error al registrar' });
+    res.status(500).json({ error: 'Error al registrar', detalle: err.message });
   }
 });
 
 // Login de usuario
 app.post('/login', async (req, res) => {
-  const { id, contrasena } = req.body;
-  if (!id || !contrasena) return res.status(400).json({ error: 'Falta id o contraseña' });
+  const { usuario, contrasena } = req.body;
+  if (!usuario || !contrasena) return res.status(400).json({ error: 'Falta usuario o contraseña' });
 
   try {
-    const usuario = await Usuario.findOne({ id, contrasena });
-    if (!usuario) return res.status(401).json({ error: 'Credenciales incorrectas' });
+    const encontrado = await Usuario.findOne({ usuario, contrasena });
+    if (!encontrado) return res.status(401).json({ error: 'Credenciales incorrectas' });
 
-    res.json({ mensaje: 'Login exitoso', usuario });
+    res.json({ mensaje: 'Login exitoso', usuario: encontrado });
   } catch (err) {
-    res.status(500).json({ error: 'Error en el login' });
+    res.status(500).json({ error: 'Error en el login', detalle: err.message });
   }
 });
-
 
 // Iniciar servidor
 app.listen(PORT, () => {
