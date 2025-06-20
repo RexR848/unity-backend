@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Conectar a MongoDB Atlas
+//Conectar a MongoDB Atlas, hellna son las 1:37 am 
 async function conectarMongo() {
   try {
     await mongoose.connect('mongodb+srv://adminunity:cetis26a2023@cetisdb-p.ppzpei7.mongodb.net/connectunity?retryWrites=true&w=majority&appName=cetisdb-p', {
@@ -21,10 +21,9 @@ async function conectarMongo() {
 }
 conectarMongo();
 
-// Modelo de usuario (colección se llamará automáticamente "usuarios")
+// /usuario, obtener todo , agregar actualizar, brrar
 const Usuario = mongoose.model('Usuario', new mongoose.Schema({}, { strict: false }));
 
-// Obtener todos los usuarios
 app.get('/usuarios', async (req, res) => {
   try {
     const usuarios = await Usuario.find();
@@ -34,7 +33,7 @@ app.get('/usuarios', async (req, res) => {
   }
 });
 
-// Agregar un nuevo usuario
+
 app.post('/usuarios', async (req, res) => {
   try {
     const nuevoUsuario = new Usuario(req.body);
@@ -45,7 +44,6 @@ app.post('/usuarios', async (req, res) => {
   }
 });
 
-// Actualizar usuario por ID
 app.put('/usuarios/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -58,7 +56,6 @@ app.put('/usuarios/:id', async (req, res) => {
   }
 });
 
-// Borrar usuario por ID
 app.delete('/usuarios/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -70,7 +67,7 @@ app.delete('/usuarios/:id', async (req, res) => {
   }
 });
 
-// Registrar usuario
+// el register d unity
 app.post('/register', async (req, res) => {
   const { usuario, contrasena } = req.body;
   if (!usuario || !contrasena) return res.status(400).json({ error: 'Falta usuario o contraseña' });
@@ -87,7 +84,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// Login de usuario
+// el login al blank
 app.post('/login', async (req, res) => {
   const { usuario, contrasena } = req.body;
   if (!usuario || !contrasena) return res.status(400).json({ error: 'Falta usuario o contraseña' });
@@ -102,7 +99,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Iniciar servidor
+// aviso de render para informar que el server si jala
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
